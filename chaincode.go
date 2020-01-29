@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/dachrillz/pharma-prototype/pkg/common"
-
 	"github.com/hyperledger/fabric-chaincode-go/shim"
 	sc "github.com/hyperledger/fabric-protos-go/peer"
 )
@@ -22,6 +20,27 @@ type Chaincode struct {
 type User struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
+}
+
+type Molecule struct {
+	ObjectType       string   `json:"docType"`
+	Version          int      `json:"version"`
+	Index            string   `json:"index"`
+	Name             string   `json:"name"`
+	Synonyms         []string `json:"synonyms"`
+	Submitter        string   `json:"submitter"`
+	Timestamp        string   `json:"timestamp"`
+	Owner            string   `json:"owner"`
+	Value            int      `json:"value"`
+	SalesPriceIPR    int      `json:"salesPriceIPR"`
+	Bids             int      `json:"bid"`
+	BiologicalTarget string   `json:"biologicalTarget"`
+	Structure        string   `json:"structure"`
+	Data             []string `json:"data"`
+	MotherMolecule   string   `json:"motherMolecule"`
+	PhysicalStorage  string   `json:"physicalStorage"`
+	Contact          string   `json:"contact"`
+	AssetType        string   `json:"assetType"`
 }
 
 // Init is called when the chaincode is instantiated by the blockchain network.
@@ -190,7 +209,7 @@ func (cc *Chaincode) TransferOwnership(stub shim.ChaincodeStubInterface, args []
 		return shim.Error("User does not exist")
 	}
 
-	asset := common.Molecule{}
+	asset := Molecule{}
 	err = json.Unmarshal(assetAsBytes, &asset)
 
 	if err != nil {
@@ -247,7 +266,7 @@ func (cc *Chaincode) UploadMolecule(stub shim.ChaincodeStubInterface, args []str
 	//@TODO: make sure that index does not already exist!
 	argumentMap := args[0]
 
-	newAsset := common.Molecule{}
+	newAsset := Molecule{}
 
 	err := json.Unmarshal([]byte(argumentMap), &newAsset)
 	if err != nil {
