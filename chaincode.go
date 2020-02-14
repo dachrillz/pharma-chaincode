@@ -7,41 +7,14 @@ import (
 
 	"github.com/hyperledger/fabric-chaincode-go/shim"
 	sc "github.com/hyperledger/fabric-protos-go/peer"
+
+	"chaincode/models"
 )
 
 // Chaincode is the definition of the chaincode structure.
 type Chaincode struct {
 }
 
-/*
-	Type Definitions
-*/
-
-type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-}
-
-type Molecule struct {
-	ObjectType       string   `json:"docType"`
-	Version          int      `json:"version"`
-	Index            string   `json:"index"`
-	Name             string   `json:"name"`
-	Synonyms         []string `json:"synonyms"`
-	Submitter        string   `json:"submitter"`
-	Timestamp        string   `json:"timestamp"`
-	Owner            string   `json:"owner"`
-	Value            int      `json:"value"`
-	SalesPriceIPR    int      `json:"salesPriceIPR"`
-	Bids             int      `json:"bid"`
-	BiologicalTarget string   `json:"biologicalTarget"`
-	Structure        string   `json:"structure"`
-	Data             []string `json:"data"`
-	MotherMolecule   string   `json:"motherMolecule"`
-	PhysicalStorage  string   `json:"physicalStorage"`
-	Contact          string   `json:"contact"`
-	AssetType        string   `json:"assetType"`
-}
 
 // Init is called when the chaincode is instantiated by the blockchain network.
 func (cc *Chaincode) Init(stub shim.ChaincodeStubInterface) sc.Response {
@@ -85,7 +58,7 @@ func (cc *Chaincode) CreateUser(stub shim.ChaincodeStubInterface, args []string)
 		return shim.Error("User already exists")
 	}
 
-	newUser := User{
+	newUser := models.User{
 		ID:   id,
 		Name: name,
 	}
@@ -116,7 +89,7 @@ func (cc *Chaincode) UpdateUser(stub shim.ChaincodeStubInterface, args []string)
 		return shim.Error("User does not exist")
 	}
 
-	user := &User{}
+	user := &models.User{}
 	err = json.Unmarshal(userAsBytes, user)
 
 	if err != nil {
@@ -209,14 +182,14 @@ func (cc *Chaincode) TransferOwnership(stub shim.ChaincodeStubInterface, args []
 		return shim.Error("User does not exist")
 	}
 
-	asset := Molecule{}
+	asset := models.Molecule{}
 	err = json.Unmarshal(assetAsBytes, &asset)
 
 	if err != nil {
 		return shim.Error("Failed to unmarshal assetAsBytes " + err.Error())
 	}
 
-	newOwner := User{}
+	newOwner := models.User{}
 	err = json.Unmarshal(newOwnerAsbytes, &newOwner)
 
 	if err != nil {
@@ -266,7 +239,7 @@ func (cc *Chaincode) UploadMolecule(stub shim.ChaincodeStubInterface, args []str
 	//@TODO: make sure that index does not already exist!
 	argumentMap := args[0]
 
-	newAsset := Molecule{}
+	newAsset := models.Molecule{}
 
 	err := json.Unmarshal([]byte(argumentMap), &newAsset)
 	if err != nil {
@@ -278,7 +251,7 @@ func (cc *Chaincode) UploadMolecule(stub shim.ChaincodeStubInterface, args []str
 		return shim.Error("Failed to marshall bytes: " + err.Error())
 	}
 
-	err = stub.PutState(newAsset.Index, newAssetAsJSONBytes)
+	err = stub.PutState(*newAsset.Index, newAssetAsJSONBytes)
 	if err != nil {
 		return shim.Error("Failed to put state for new asset: " + err.Error())
 	}
