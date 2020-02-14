@@ -21,58 +21,35 @@ type User struct {
 
 type Molecule struct {
 
-	// asset type
-	AssetType string `json:"assetType,omitempty"`
+	// calculated properties
+	CalculatedProperties []string `json:"calculated-properties"`
 
-	// bids
-	Bids int64 `json:"bids,omitempty"`
+	// comments
+	Comments string `json:"comments,omitempty"`
 
-	// biological target
-	BiologicalTarget string `json:"biologicalTarget,omitempty"`
+	// documented properties
+	DocumentedProperties []string `json:"documented-properties"`
 
-	// contact
-	Contact string `json:"contact,omitempty"`
+	// inchi
+	Inchi string `json:"inchi,omitempty"`
 
-	// data
-	Data []string `json:"data"`
-
-	// index
-	// Required: true
-	Index *string `json:"index"`
-
-	// mother molecule
-	MotherMolecule string `json:"motherMolecule,omitempty"`
+	// institution
+	Institution string `json:"institution,omitempty"`
 
 	// name
 	// Required: true
 	Name *string `json:"name"`
 
-	// owner
-	Owner string `json:"owner,omitempty"`
+	// smiles
+	Smiles string `json:"smiles,omitempty"`
 
-	// physical storage
-	PhysicalStorage string `json:"physicalStorage,omitempty"`
-
-	// sales price IP r
-	SalesPriceIPR int64 `json:"salesPriceIPR,omitempty"`
-
-	// structure
-	Structure string `json:"structure,omitempty"`
-
-	// submitter
-	Submitter string `json:"submitter,omitempty"`
-
-	// synonyms
-	Synonyms []string `json:"synonyms"`
-
-	// timestamp
-	Timestamp string `json:"timestamp,omitempty"`
+	// uploader
+	Uploader string `json:"uploader,omitempty"`
 
 	// value
 	Value int64 `json:"value,omitempty"`
 
-	// version
-	Version int64 `json:"version,omitempty"`
+	Owner string
 }
 
 // Chaincode is the definition of the chaincode structure.
@@ -314,7 +291,7 @@ func (cc *Chaincode) UploadMolecule(stub shim.ChaincodeStubInterface, args []str
 		return shim.Error("Failed to marshall bytes: " + err.Error())
 	}
 
-	err = stub.PutState(*newAsset.Index, newAssetAsJSONBytes)
+	err = stub.PutState(*newAsset.Name, newAssetAsJSONBytes)
 	if err != nil {
 		return shim.Error("Failed to put state for new asset: " + err.Error())
 	}

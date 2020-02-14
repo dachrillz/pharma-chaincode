@@ -16,67 +16,38 @@ import (
 // swagger:model Molecule
 type Molecule struct {
 
-	// asset type
-	AssetType string `json:"assetType,omitempty"`
+	// calculated properties
+	CalculatedProperties []string `json:"calculated-properties"`
 
-	// bids
-	Bids int64 `json:"bids,omitempty"`
+	// comments
+	Comments string `json:"comments,omitempty"`
 
-	// biological target
-	BiologicalTarget string `json:"biologicalTarget,omitempty"`
+	// documented properties
+	DocumentedProperties []string `json:"documented-properties"`
 
-	// contact
-	Contact string `json:"contact,omitempty"`
+	// inchi
+	Inchi string `json:"inchi,omitempty"`
 
-	// data
-	Data []string `json:"data"`
-
-	// index
-	// Required: true
-	Index *string `json:"index"`
-
-	// mother molecule
-	MotherMolecule string `json:"motherMolecule,omitempty"`
+	// institution
+	Institution string `json:"institution,omitempty"`
 
 	// name
 	// Required: true
 	Name *string `json:"name"`
 
-	// owner
-	Owner string `json:"owner,omitempty"`
+	// smiles
+	Smiles string `json:"smiles,omitempty"`
 
-	// physical storage
-	PhysicalStorage string `json:"physicalStorage,omitempty"`
-
-	// sales price IP r
-	SalesPriceIPR int64 `json:"salesPriceIPR,omitempty"`
-
-	// structure
-	Structure string `json:"structure,omitempty"`
-
-	// submitter
-	Submitter string `json:"submitter,omitempty"`
-
-	// synonyms
-	Synonyms []string `json:"synonyms"`
-
-	// timestamp
-	Timestamp string `json:"timestamp,omitempty"`
+	// uploader
+	Uploader string `json:"uploader,omitempty"`
 
 	// value
 	Value int64 `json:"value,omitempty"`
-
-	// version
-	Version int64 `json:"version,omitempty"`
 }
 
 // Validate validates this molecule
 func (m *Molecule) Validate(formats strfmt.Registry) error {
 	var res []error
-
-	if err := m.validateIndex(formats); err != nil {
-		res = append(res, err)
-	}
 
 	if err := m.validateName(formats); err != nil {
 		res = append(res, err)
@@ -85,15 +56,6 @@ func (m *Molecule) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-func (m *Molecule) validateIndex(formats strfmt.Registry) error {
-
-	if err := validate.Required("index", "body", m.Index); err != nil {
-		return err
-	}
-
 	return nil
 }
 
